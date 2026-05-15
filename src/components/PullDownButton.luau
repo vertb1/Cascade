@@ -315,6 +315,7 @@ return function(self, properties: types.PullDownButtonProperties): types.PullDow
 			for _, option in ipairs(structures.Options) do
 				option:Destroy()
 			end
+			table.clear(structures.Options)
 
 			for index, _option in ipairs(value) do
 				option(object, _option, index)
@@ -374,6 +375,7 @@ return function(self, properties: types.PullDownButtonProperties): types.PullDow
 	object.Remove = function(self, index: number?)
 		if index and structures.Options[index] then
 			structures.Options[index]:Destroy()
+			structures.Options[index] = nil
 			object.Options[index] = nil
 		end
 	end

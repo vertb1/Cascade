@@ -68,7 +68,7 @@ return function(self, properties: types.PopUpButtonProperties): types.PopUpButto
 		else
 			desiredX = bodyPos.X + HORIZONTAL_OFFSET
 		end
-		
+
 		local desiredY = bodyPos.Y + bodySize.Y + VERTICAL_PADDING
 		local maxX = math.max(EDGE_BUFFER, viewportSize.X - EDGE_BUFFER - menuSize.X)
 		local maxY = math.max(EDGE_BUFFER, viewportSize.Y - EDGE_BUFFER - menuSize.Y)
@@ -406,6 +406,7 @@ return function(self, properties: types.PopUpButtonProperties): types.PopUpButto
 			for _, option in ipairs(structures.Options) do
 				option:Destroy()
 			end
+			table.clear(structures.Options)
 
 			for index, _option in ipairs(value) do
 				option(object, _option, index)
@@ -474,10 +475,13 @@ return function(self, properties: types.PopUpButtonProperties): types.PopUpButto
 					end
 				end
 			else
-				if not value or not structures.Options[value] then
+				local optionLabel = value
+					and structures.Options[value]
+					and structures.Options[value]:FindFirstChild("Label")
+				if not optionLabel then
 					structures.CurrentTab.Text = "None"
 				else
-					structures.CurrentTab.Text = structures.Options[value]:FindFirstChild("Label").Text
+					structures.CurrentTab.Text = optionLabel.Text
 				end
 
 				for index, option in ipairs(structures.Options) do
@@ -526,6 +530,7 @@ return function(self, properties: types.PopUpButtonProperties): types.PopUpButto
 	object.Remove = function(self, index: number?)
 		if index and structures.Options[index] then
 			structures.Options[index]:Destroy()
+			structures.Options[index] = nil
 			object.Options[index] = nil
 		end
 	end
