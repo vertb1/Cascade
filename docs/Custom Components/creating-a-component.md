@@ -22,6 +22,9 @@ ctx:Toggle():Test() -- "Toggle"
 
 `properties` is the table passed by the user when calling your component. You should use this to customize the appearance and behavior of your component.
 
+!!! important
+    You are technically not limited to the `Properties` argument, or any argument for that matter. You could accept any number of arguments, since you are defining the component. But a `properties` table is usually all you will need.
+
 ---
 
 ## Example: A "Card" Component
