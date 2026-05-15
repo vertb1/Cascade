@@ -366,42 +366,89 @@ do -- Main window
 			})
 
 			do -- Appearance
-				local form = tab:PageSection({ Title = "Appearance" }):Form()
+				local pageSection = tab:PageSection({ Title = "Appearance" })
 
-				do -- Dark mode
-					local row = titledRow(
-						form,
-						"Dark mode",
-						"An application appearance setting that uses a dark color palette to provide a comfortable viewing experience tailored for low-light environments."
-					)
+				do
+					local form = pageSection:Form()
 
-					row:Right():Toggle({
-						Value = app.Theme._id == "Dark",
-						ValueChanged = function(self, value: boolean)
-							app.Theme = value and cascade.Themes.Dark or cascade.Themes.Light
-						end,
-					})
-				end
+					do -- Appearance
+						local row = titledRow(form, "Appearance", "Customize the application appearance.")
 
-				do -- Application accent
-					local row = titledRow(
-						form,
-						"Application accent",
-						"An application appearance setting that allows you to change the overall accent of the application."
-					)
-
-					local flattenedAccents = {}
-					for accent, _ in pairs(cascade.Accents) do
-						table.insert(flattenedAccents, accent)
+						row:Right():RadioButtonGroup({
+							Options = { "Dark", "Light" },
+							Value = app.Theme._id == "Dark" and 1,
+							ValueChanged = function(self, value: number)
+								app.Theme = cascade.Themes[self.Options[value]]
+							end,
+						})
 					end
 
-					row:Right():PopUpButton({
-						Value = table.find(flattenedAccents, (app.Accent and app.Accent._id) or "Blue"),
-						Options = flattenedAccents,
-						ValueChanged = function(self, value: number)
-							app.Accent = cascade.Accents[self.Options[value]]
-						end,
-					})
+					do -- Color
+						local row = titledRow(form, "Color", "Customize the application color.")
+
+						local flattenedAccents = {}
+						for accent, _ in pairs(cascade.Accents) do
+							table.insert(flattenedAccents, accent)
+						end
+
+						local accentValue = table.find(flattenedAccents, (app.Accent and app.Accent._id) or "Graphite")
+
+						row:Right():PopUpButton({
+							Value = accentValue,
+							Options = flattenedAccents,
+							ValueChanged = function(self, value: number)
+								app.Accent = cascade.Accents[self.Options[value]]
+							end,
+						})
+					end
+				end
+
+				do
+					local form = pageSection:Form()
+
+					do -- Toolbar Title
+						local row = titledRow(form, "Toolbar title", "Customize the application toolbar title.")
+
+						local oldWindowName = window.Title
+
+						local titleField = row:Right():TextField({
+							Value = window.Title,
+							Placeholder = "Title...",
+							ValueChanged = function(self, value: string)
+								window.Title = value
+							end,
+						})
+
+						row:Right():Button({
+							Label = "Reset",
+							State = "Destructive",
+							Pushed = function(self, value: string)
+								titleField.Value = oldWindowName
+							end,
+						})
+					end
+
+					do -- Toolbar subtitle
+						local row = titledRow(form, "Toolbar sub-title", "Customize the application toolbar subtitle.")
+
+						local oldWindowSubtitle = window.Subtitle
+
+						local subTitleField = row:Right():TextField({
+							Value = window.Subtitle,
+							Placeholder = "Sub-title...",
+							ValueChanged = function(self, value: string)
+								window.Subtitle = value
+							end,
+						})
+
+						row:Right():Button({
+							Label = "Reset",
+							State = "Destructive",
+							Pushed = function(self, value: string)
+								subTitleField.Value = oldWindowSubtitle
+							end,
+						})
+					end
 				end
 			end
 
@@ -517,6 +564,80 @@ do -- Main window
 							window.UIBlur = value
 						end,
 					})
+				end
+			end
+		end
+
+		-- SF Symbols
+		do
+			local link = "https://sf-symbols.pages.dev/"
+			local tab = section:Tab({
+				Title = "SF Symbols",
+				Icon = cascade.Symbols.scribbleVariable,
+			})
+
+			do
+				local pageSection =
+					tab:PageSection({ Title = "SF Symbols", Subtitle = "Cascade has a built-in SF Symbols library." })
+
+				do
+					local form = pageSection:Form()
+
+					-- Legal notice
+					do
+						local row = form:Row()
+
+						row:Left():Label({
+							Text = "<i>"
+								.. "SF Symbols © Apple Inc.\n"
+								.. "SF Symbols is a trademark of Apple Inc."
+								.. "</i>",
+							TextXAlignment = Enum.TextXAlignment.Left,
+						})
+					end
+
+					-- SF Symbols discovery link
+					do
+						local row = titledRow(
+							form,
+							"Official SF Symbols",
+							"Explore the full SF Symbols library. Assets created by Apple Inc. Website and discovery curated by the Cascade developers."
+						)
+
+						row:Right():Button({
+							Label = "Copy link",
+							Pushed = function(self)
+								if setclipboard then
+									setclipboard(link)
+								end
+
+								app:Notification({
+									App = "Cascade",
+
+									Title = setclipboard and "Copied" or "Unable to copy",
+									Subtitle = not setclipboard
+										and `The current environment does not support \`setclipboard\`, Official link: <u>{link}</u>`,
+
+									Duration = 8,
+								})
+							end,
+						})
+					end
+				end
+
+				-- Info
+				do
+					local form = pageSection:Form()
+
+					-- Info
+					do
+						local row = form:Row()
+
+						row:Left():Label({
+							Text = "SF Symbols 7 is the officially supported built-in icon system for Cascade, it includes 6,900+ symbols which have all been imported to ROBLOX and are exposed with `Cascade.Symbols`",
+							TextXAlignment = Enum.TextXAlignment.Left,
+						})
+					end
 				end
 			end
 		end
