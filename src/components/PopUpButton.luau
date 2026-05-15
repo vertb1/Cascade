@@ -88,6 +88,7 @@ return function(self, properties: types.PopUpButtonProperties): types.PopUpButto
 			AutomaticSize = Enum.AutomaticSize.XY,
 			BorderColor3 = Color3.fromRGB(0, 0, 0),
 			BorderSizePixel = 0,
+			BackgroundTransparency = 1,
 			Selectable = false,
 			Text = "",
 			LayoutOrder = index,
@@ -95,7 +96,6 @@ return function(self, properties: types.PopUpButtonProperties): types.PopUpButto
 
 			__dynamicKeys = {
 				BackgroundColor3 = self.Theme.Controls.SelectionFocused[1],
-				BackgroundTransparency = self.Theme.Controls.SelectionFocused[2],
 			},
 			__contextKeys = {
 				BackgroundTransparency = function()
