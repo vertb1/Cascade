@@ -11,6 +11,7 @@ nav = [
         "Getting Started/interface-guidelines.md",
         "Getting Started/importing-the-library.md",
         "Getting Started/building-from-source.md",
+        "Getting Started/example.md",
         { "The API" = [
             "Getting Started/The API/index.md",
             "Getting Started/The API/app.md",
@@ -18,7 +19,6 @@ nav = [
             "Getting Started/The API/themes.md",
             "Getting Started/The API/accents.md",
         ] },
-        "Getting Started/example.md",
     ] },
     { "Components" = [
         "Components/index.md",
